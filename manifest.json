@@ -1,0 +1,9 @@
+{
+  "name": "Battlescribe Chrome Extension",
+  "description": "Battlescribe",
+  "version": "1.0",
+  "manifest_version": 3,
+  "content_scripts": [
+    { "matches":  ["file://*"], "js":  ["content.js"]}
+  ]
+}
