@@ -1,3 +1,5 @@
+import { overallCss } from './overall-css';
+
 function init() {
   addOverallStylingCss()
   addFeaturesToUnits();
@@ -44,10 +46,8 @@ function deleteUselessShit() {
 }
 
 function addOverallStylingCss() {
-  let style = document.createElement('style');
-  style.innerHTML = '';
-
-  document.getElementsByTagName('head')[0].appendChild(style);
+  console.log(overallCss)
+  document.querySelector('head')!.innerHTML += `<style>${overallCss}</style>`
 }
 
 init()
