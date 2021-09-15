@@ -4,6 +4,6 @@
   "version": "1.0",
   "manifest_version": 3,
   "content_scripts": [
-    { "matches":  ["file://*"], "js":  ["content.js"]}
+    { "matches":  ["file://*"], "js":  ["dist/dist.min.js"]}
   ]
 }
