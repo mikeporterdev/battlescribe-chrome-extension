@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "removeComments": true,
-    "lib": ["es2015", "es2017", "dom", "dom.iterable"],
+    "lib": ["es2015", "es2017", "es2019", "dom", "dom.iterable"],
     "strictNullChecks": true,
     "noImplicitThis": true,
     "noUnusedLocals": true,

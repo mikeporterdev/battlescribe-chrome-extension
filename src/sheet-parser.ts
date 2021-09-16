@@ -1,5 +1,6 @@
 export function parseSheet(sheet: Document): Army {
-  let detachmentsHtml = [...sheet.querySelectorAll('.battlescribe > ul > li')];
+  const elementNodeListOf = sheet.querySelectorAll('.battlescribe > ul > li');
+  let detachmentsHtml = [...elementNodeListOf];
   return {
     detachments: detachmentsHtml.map(html => parseDetachment(html))
   }
@@ -9,13 +10,13 @@ export function parseDetachment(detachment: Element): Detachment {
   let unitsHtml = [...detachment.querySelectorAll('ul > .category > ul > li')]
 
   return {
-    units: unitsHtml.map(html => parseUnit(html))
+    units: filterCruftUnits(unitsHtml.map(html => parseUnit(html)))
   }
 }
 
 export function parseUnit(unitHtml: Element): Unit {
   let querySelector = unitHtml.querySelector('h4');
-  let name = querySelector!.innerText
+  let name = querySelector!.innerHTML
 
   let modelsHtml = [...unitHtml.querySelectorAll('li')];
   let categories = unitHtml.querySelectorAll('.caps')[0]?.textContent?.split(',') ?? [];
@@ -26,9 +27,17 @@ export function parseUnit(unitHtml: Element): Unit {
   }
 }
 
+export function filterCruftUnits(units: Unit[]): Unit[] {
+  const textsToFilter = ['Battle Size', 'Detachment Command Cost', 'Dynasty Choice'];
+  return units.filter(unit => !textsToFilter.some(text => unit.name.includes(text)))
+}
 
 export function parseModel(modelHtml: Element): Model {
-  let title = modelHtml.querySelector('h4')!.innerText;
+  const titleH4 = modelHtml.querySelector('h4');
+  if (!titleH4) {
+    throw new Error('No Title found for model')
+  }
+  let title = titleH4.innerHTML;
   let categories = modelHtml.querySelectorAll('.caps')[0]?.textContent?.split(',') ?? [];
 
   return {
