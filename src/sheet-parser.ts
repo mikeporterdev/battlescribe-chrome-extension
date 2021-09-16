@@ -1,3 +1,5 @@
+import { Army, Detachment, Model, Unit } from './types';
+
 export function parseSheet(sheet: Document): Army {
   const elementNodeListOf = sheet.querySelectorAll('.battlescribe > ul > li');
   let detachmentsHtml = [...elementNodeListOf];
@@ -19,11 +21,20 @@ export function parseUnit(unitHtml: Element): Unit {
   let name = querySelector!.innerHTML
 
   let modelsHtml = [...unitHtml.querySelectorAll('li')];
-  let categories = unitHtml.querySelectorAll('.caps')[0]?.textContent?.split(',') ?? [];
+  let categories = parseCategories(unitHtml);
+
+  let models = modelsHtml.map(html => parseModel(html));
+
+  const isWarlord = models.find(model => model.name === 'Warlord');
+  if (isWarlord) {
+    models = models.filter(model => model.name !== 'Warlord');
+  }
+
   return {
     name: name,
-    models: modelsHtml.map(html => parseModel(html)),
-    categories: categories
+    models: models,
+    categories: categories,
+    warlord: !!isWarlord
   }
 }
 
@@ -38,12 +49,17 @@ export function parseModel(modelHtml: Element): Model {
     throw new Error('No Title found for model')
   }
   let title = titleH4.innerHTML;
-  let categories = modelHtml.querySelectorAll('.caps')[0]?.textContent?.split(',') ?? [];
+  let categories = parseCategories(modelHtml);
 
   return {
     ...parseModelTitle(title),
     categories
   }
+}
+
+function parseCategories(html: Element): string[] {
+  const categoryStrings = html.querySelector('.caps')?.textContent?.split(',') ?? [];
+  return categoryStrings.map(string => string.trim())
 }
 
 function parseModelTitle(title: string): { name: string, quantity: number } {
@@ -58,22 +74,3 @@ function parseModelTitle(title: string): { name: string, quantity: number } {
   }
 }
 
-export interface Army {
-  detachments: Detachment[];
-}
-
-export interface Detachment {
-  units: Unit[];
-}
-
-export interface Unit {
-  name: string;
-  models: Model[];
-  categories: string[];
-}
-
-export interface Model {
-  name: string;
-  quantity: number;
-  categories: string[];
-}
