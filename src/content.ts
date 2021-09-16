@@ -1,6 +1,9 @@
 import { overallCss } from './overall-css';
+import { parseSheet } from './sheet-parser';
 
 function init() {
+  console.log(parseSheet(document))
+
   addOverallStylingCss()
   addFeaturesToUnits();
   deleteUselessShit()
@@ -46,7 +49,6 @@ function deleteUselessShit() {
 }
 
 function addOverallStylingCss() {
-  console.log(overallCss)
   document.querySelector('head')!.innerHTML += `<style>${overallCss}</style>`
 }
 
